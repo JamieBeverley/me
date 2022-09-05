@@ -2,7 +2,7 @@
 layout: home
 ---
 
-![jamiebeverley](/assets/images/me.jpg)
+![jamiebeverley]({{ site.baseurl }}/assets/images/me.jpg)
 
 I am a full-stack software developer and designer with a background in Human-Computer Interaction and New Media.
 
