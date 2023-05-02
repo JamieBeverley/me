@@ -8,4 +8,4 @@ I work at Unity Health Toronto as the Director of Product Development for the Da
 
 I am passionate about electronic music and in my free time enjoy creating new experimental software for music performance (and sometimes I also get around to actually performing with it...). 
 
-Please feel free to get in touch via [LinkedIn](https://www.linkedin.com/in/jamie-beverley-2a221695/).
+Please feel welcome to get in touch via [LinkedIn](https://www.linkedin.com/in/jamie-beverley-2a221695/).

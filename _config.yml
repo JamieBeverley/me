@@ -21,9 +21,27 @@
 title: jamie beverley
 baseurl: "/me" # the subpath of your site, e.g. /blog
 url: "https://jamiebeverley.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  jamiebeverley
+footer_links: 
+  linkedin: jamie-beverley-2a221695
+  github_username:  jamiebeverley
+include: ['_pages']
 theme: minima
-
+minima:
+  skin: dark
+  social_links:
+    - { platform: github,  user_url: "https://github.com/jamiebeverley" }
+    - { platform: linkedin, user_url: "https://www.linkedin.com/in/jamie-beverley-2a221695/" }
+markdown: kramdown
+highlighter: rouge
+input: GFM
+kramdown:
+  math_engine: mathjax
+  syntax_highlighter: rouge
+pages:
+  sort_by: order
+collections:
+  ramblings:
+    output: true
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to

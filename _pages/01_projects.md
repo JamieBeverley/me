@@ -2,20 +2,20 @@
 layout: page
 title: Projects
 permalink: /projects/
+order: 1
+published: true
 ---
 
-<h2 style="border-bottom:1pt solid #E8E8E8;">Currently Exploring</h2>
+<h2 style="border-bottom:1pt solid #E8E8E8;">Recent Development</h2>
 
-### Yet Another Model Server (yams)
-- A repeating set of needs we see in our data science projects when we go to deploy models; some http API to serve predictions, a database that saves predictions and other relevant contextual info relating to each prediction, an easy mechanism to version and deploy models, an internal dashboard and alerts for monitoring model (and feature?) drift.
-- Ideally we wouldn't prescribe any limitations on what tools/frameworks data scientists use.
-- Prototyping a service which includes; a gateway API for proxying requests to model HTTP services, middleware which saves predictions to a database, a language-agnostic API for publishing new models, and some minimal orchestration for spinning up/spinning down model services based on demand (likely later using something like K8s or Nomad instead of a loose mess of containers)
-- I had rough and preliminary progress in python (Django) which I'm rewriting in Go.
-
-### Dockerizing Extramuros & TidalCycles
-- Installing [TidalCycles](https://tidalcycles.org/) can be tricky so I thought it would be fun to dockerize it (although you could argue that adding docker is just adding a different barrier to entry...)
-- I also wanted an instance of [extramuros](https://github.com/dktr0/extramuros) that I could spin-up and spin-down easily for collaborative online live-coding with Tidal
-- I dockerized Extramuros too and developed a basic Terraform file for provisioning and deploying Extramuros to GCP
+<ul>
+  {% assign sorted = site.ramblings | sort: 'order' | reverse  %}
+  {% for ramble in sorted %}
+    <li>
+      <a href="{{  ramble.url | relative_url  }}">{{ ramble.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
 
 
 <h2 style="border-bottom:1pt solid #E8E8E8;">Open Source Contributions</h2>
@@ -44,7 +44,7 @@ permalink: /projects/
 - Synchronized state over websockets for collaborative performances and suppporting different form-factors (tablet, desktop, hardware MIDI controller) 
 - Unfortunately deprecated! Would live to revive this some day, probably as a fresh rewrite in typescript and implementing server synchronization more intelligently...
 
-<h2 style="border-bottom:1pt solid #E8E8E8;">Other Things</h2>
+<h2 style="border-bottom:1pt solid #E8E8E8;">Other Tinkerings</h2>
 
 ### [MIDISynthDef](https://github.com/JamieBeverley/MIDISynthDef) 
 - Small extension for SuperCollider for authoring audio synthesis patches (SynthDef’s) that are responsive to MIDI messages (without all the boilerplate of writing MIDIDefs)
