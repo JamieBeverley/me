@@ -2,7 +2,7 @@
 layout: home
 ---
 
-I am a full-stack software developer and designer with a background in Human-Computer Interaction and New Media.
+I am a full-stack software developer with a background in Human-Computer Interaction and 4 years of industry experience designing and deploying Machine Learning applications.
 
 I work at Unity Health Toronto as the Director of Product Development for the Data Science and Advanced Analytics team (DSAA). At DSAA we develop machine learning and data science products that aim to improve patient outcomes and system efficiency at our 3 hospitals (St. Michael's, St. Joseph's Health Centre, and Providence Healthcare).
 
