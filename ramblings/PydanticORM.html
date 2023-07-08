@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A Minial ORM for Python, Leaning on Pydantic | jamie beverley</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="A Minial ORM for Python, Leaning on Pydantic" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A Minimal ORM for Python Leaning on Pydantic We reached a point in an urgent project recently where we needed to make an 11th hour change in our backend. We would no longer be connecting to an MSSQL DB, but an intermediary data store that only accepts generic ODBC/JDBC connections." />
+<meta property="og:description" content="A Minimal ORM for Python Leaning on Pydantic We reached a point in an urgent project recently where we needed to make an 11th hour change in our backend. We would no longer be connecting to an MSSQL DB, but an intermediary data store that only accepts generic ODBC/JDBC connections." />
+<link rel="canonical" href="https://jamiebeverley.github.io/me/ramblings/PydanticORM.html" />
+<meta property="og:url" content="https://jamiebeverley.github.io/me/ramblings/PydanticORM.html" />
+<meta property="og:site_name" content="jamie beverley" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-07-08T15:10:52+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="A Minial ORM for Python, Leaning on Pydantic" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"GitHub User"},"dateModified":"2023-07-08T15:10:52+00:00","datePublished":"2023-07-08T15:10:52+00:00","description":"A Minimal ORM for Python Leaning on Pydantic We reached a point in an urgent project recently where we needed to make an 11th hour change in our backend. We would no longer be connecting to an MSSQL DB, but an intermediary data store that only accepts generic ODBC/JDBC connections.","headline":"A Minial ORM for Python, Leaning on Pydantic","mainEntityOfPage":{"@type":"WebPage","@id":"https://jamiebeverley.github.io/me/ramblings/PydanticORM.html"},"url":"https://jamiebeverley.github.io/me/ramblings/PydanticORM.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/me/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://jamiebeverley.github.io/me/feed.xml" title="jamie beverley" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-ESYJ224FG2"></script>
+<script>
+  window['ga-disable-G-ESYJ224FG2'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ESYJ224FG2');
+</script>
+
+<link rel="stylesheet" href="/me/assets/css/main.css">
+</head>
+<body><header class="site-header">
+  <div class="wrapper">
+    <div style="display:flex; align-items:center; gap:10px">
+      <img src=/me/assets/images/me.jpg class='profile' alt="profile picture"><a class="site-title" rel="author" href="/me/">jamie beverley</a>
+    </div><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/me/projects/">Projects</a><a class="page-link" href="/me/music/">Music</a><a class="page-link" href="/me/publications/">Publications</a></div>
+      </nav></div>
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">A Minial ORM for Python, Leaning on Pydantic</h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="a-minimal-orm-for-python-leaning-on-pydantic">A Minimal ORM for Python Leaning on Pydantic</h3>
+<p>We reached a point in an urgent project recently where we needed to make an 11th hour change in our backend. We would no longer be connecting to an MSSQL DB, but an intermediary data store that only accepts generic ODBC/JDBC connections.</p>
+
+<p>We were depending on SQLAlchemy as a significant ORM library to manage non-trivial transactions (bulk upserts, bulk expire-create updates, etc…). Unfortunately, I couldn’t find a SQLAlchemy Dialect that would work with our data store (I tried <a href="https://pypi.org/project/sqlalchemy-jdbcapi/">sqlalchemy-jdbcapi</a> without luck).</p>
+
+<p>It might have made sense at this point to dig deeper into SQLAlchemy’s internals and implement our own Dialect but it was a scary path to take given our tight deadline (in hindsight it may have been the right call).</p>
+
+<p>Regardless, in place of SQLAlchemy I developed a minimal ORM library that is (rather tightly) coupled to Pydantic, using <code class="language-plaintext highlighter-rouge">BaseModel</code> instances as the object representation of database records (currently 1 object = 1 row).</p>
+
+<h4 id="our-goalsrequirements-of-this-library-were-as-follows">Our goals/requirements of this library were as follows:</h4>
+<ul>
+  <li>A declarative API for describing how database tables and columns map to python object representations</li>
+  <li>Basic CRUD (create/retrieve/update/delete) operations for database tables</li>
+  <li>Validation of all data using Pydantic prior to writing to the database via update/insert operations</li>
+  <li>Validation of all data retrieved from the database to ensure we’re type-safe</li>
+  <li>Some mechanism for easily wrapping more sophisticated operations in a transaction to ensure atomicity</li>
+  <li>An class structure that can be easily extended/inherited to add further functionality</li>
+</ul>
+
+<h4 id="where-were-currently">Where we’re currently</h4>
+<p>If we have a database table:</p>
+<pre><code class="language-SQL">CREATE TABLE my_table(
+  some_identifier string,
+  some_value boolean,
+  some_other_value integer,
+)
+</code></pre>
+<p>We can map to it as follows:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">PydanticORM</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="k">class</span> <span class="nc">MyTableT</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+  <span class="nb">id</span><span class="p">:</span><span class="nb">str</span>
+  <span class="n">value</span><span class="p">:</span><span class="nb">bool</span>
+  <span class="n">other_value</span><span class="p">:</span><span class="nb">int</span>
+
+<span class="c1"># TableMapper class handles the actual representation mapping. With knowledge of
+# the SQL structure, TableMapper implements generation of SQL, and query 
+# parameterization
+</span><span class="n">table_mapping</span> <span class="o">=</span> <span class="n">TableMapper</span><span class="p">(</span>
+  <span class="n">table_name</span><span class="o">=</span><span class="s">"my_table"</span><span class="p">,</span>
+  <span class="n">column_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"some_identifier"</span><span class="p">:</span> <span class="s">"id"</span><span class="p">,</span>
+    <span class="s">"some_value"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">,</span>
+    <span class="s">"some_other_value"</span><span class="p">:</span> <span class="s">"other_value"</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="n">primary_keys</span><span class="o">=</span><span class="p">{</span><span class="s">"some_identifier"</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">MyTable</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">MyTableT</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="n">table_mapping</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">TransactionManager</span><span class="p">(</span><span class="n">con</span><span class="p">)</span> <span class="k">as</span> <span class="n">con</span><span class="p">:</span>
+  <span class="n">row</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MyTableT</span><span class="p">]</span> <span class="o">=</span> <span class="n">MyTable</span><span class="p">.</span><span class="n">get_one_safe</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">"somethign"</span><span class="p">)</span>
+  <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MyTableT</span><span class="p">]</span> <span class="o">=</span> <span class="n">MyTable</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+  <span class="n">MyTable</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">"1234"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">other_value</span><span class="o">=</span><span class="mi">1234</span><span class="p">)</span>
+  <span class="n">MyTable</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c1"># Error =&gt; primary key not provided
+</span>  <span class="n">MyTable</span><span class="p">.</span><span class="n">update_many</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c1"># permitted
+</span>  <span class="n">MyTable</span><span class="p">.</span><span class="n">upsert</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c1"># Error -&gt; PK required for upsert
+</span>  <span class="n">MyTable</span><span class="p">.</span><span class="n">upsert</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">"1234"</span><span class="p">,</span> <span class="n">other_value</span><span class="o">=</span><span class="mi">4321</span><span class="p">)</span> <span class="c1"># performs update if row w/ pk exists, otherwise inserts
+</span>
+<span class="c1"># Delete apis are on their way, just haven't needed to implement them yet...
+</span></code></pre></div></div>
+<p>We also created an <code class="language-plaintext highlighter-rouge">Expire</code> mixin class to enable expiring rows instead of deleting:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">PydanticORM.mixins</span> <span class="kn">import</span> <span class="n">Expire</span>
+<span class="k">class</span> <span class="nc">ExpireTable</span><span class="p">(</span><span class="n">Table</span><span class="p">,</span> <span class="n">Expire</span><span class="p">):</span>
+  <span class="n">expire_col</span> <span class="o">=</span> <span class="s">"expired_ts"</span>
+
+<span class="n">MyTable</span> <span class="o">=</span> <span class="n">ExpireTable</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">...,</span> <span class="n">table_mapping</span><span class="o">=</span><span class="p">...)</span>
+
+<span class="n">MyTable</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="p">...)</span>
+<span class="n">MyTable</span><span class="p">.</span><span class="n">update_by_expire</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="p">...)</span> <span class="c1"># expires a row, creates a new one with the provided updates
+</span><span class="n">MyTable</span><span class="p">.</span><span class="n">update_many_by_expire</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="p">...)</span>
+</code></pre></div></div>
+<p>(I’m not quite sure a mixin was the right pattern here, <code class="language-plaintext highlighter-rouge">Expire</code> could probably be its own subclass of <code class="language-plaintext highlighter-rouge">Table</code>)</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/me/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <!-- <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="https://jamiebeverley.github.io/me/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/me/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">GitHub User</li>
+          <li><a class="u-email" href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p></p>
+      </div> -->
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://github.com/jamiebeverley" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/me/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.linkedin.com/in/jamie-beverley-2a221695/" target="_blank" title="linkedin">
+    <svg class="svg-icon grey">
+      <use xlink:href="/me/assets/minima-social-icons.svg#linkedin"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+</footer>
+</body>
+
+</html>

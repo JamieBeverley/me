@@ -1,0 +1,27 @@
+
+.site-header{
+  border-top:none;
+  background-image: url("../images/bg.png");
+  background-repeat: no-repeat;
+  background-size: 860px 56px;
+}
+
+.site-header .wrapper {
+  display : flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wrapper::after {
+  content: unset
+}
+.profile {
+  height:40px;
+  border-radius: 50%;
+  float: left;
+}
+
+.site-footer{
+  background-image: url("../images/footer-bg.png");
+  background-repeat: no-repeat;
+  background-size: 1920px 116px;
+}
