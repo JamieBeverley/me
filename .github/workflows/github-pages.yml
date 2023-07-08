@@ -3,11 +3,13 @@ name: Build and deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # or master before October 2020
+      - main
 
 jobs:
   github-pages:
     runs-on: ubuntu-latest
+    env:
+      JEKYLL_ENV: production
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
