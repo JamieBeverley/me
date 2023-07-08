@@ -1,6 +1,9 @@
+.experiments
 scratch
 _site
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
 vendor
+
+.venv
