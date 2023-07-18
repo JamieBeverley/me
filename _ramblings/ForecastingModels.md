@@ -1,6 +1,7 @@
 ---
-layout: page
-title: 'An Abstraction for Models that Forecast Wait Times' 
+layout: post
+title: 'An Abstraction for Models that Forecast Wait Times'
+toc: true
 order: 4
 ---
 
@@ -18,8 +19,7 @@ In developing the application integration for this product we anticipated the fo
 # Implementation
 We started by encoding the requirements of a model in a python interface/abstract base classe (ABC).
 A model in this conception:
-- must have a name associated to it
-- must have a version associated to it
+- must have a name and version associated to it (together, uniquely identify a model)
 - must define a function for productin a prediction, given some input data type `DataT`
 
 ```python
@@ -56,7 +56,7 @@ class Model(ABC):
     raise NotImplementedError
 ```
 Lets assume that our `DataT` is a `pandas.DataFrame` object containing wait times for the last 2 weeks.
-A concrete class implementing this interface for a very minimal moving average model would look something like this:
+A concrete class implementing this interface for a very basic moving average model would look something like this:
 
 ```python
 class MovingAverageModel(Model):
@@ -184,15 +184,14 @@ dependencies into a frontend repository. Unless we're somewhat careful managing
 processes/threads we could accidentally tie up processes with running
 inference/prediction instead of serving workloads required for the UI.
 
-Instead, we choose to run models via a scheduler every `X` minutes to batch
-predictions:
+Instead, we choose to run models via a scheduler every `X` minutes:
 - model execution job runs every 15 mins, executing all models
 - predictions are written to a database
 - frontend application can pull the most recent predictions from this database
 - an internal monitoring tool can pull recent and historical predictions to
 monitor performance and drift.
 
-## Scheduled model runs
+## Batch Model Runs
 We just need some utilities to do the following at a regular interval:
 - pull our input data from a database
 - iterate through our model classes and run inference
@@ -272,7 +271,8 @@ def main():
       raise Execption(f"{len(errors)} models failed to run") from errors[0]
 ```
 
-We run something like this every 15 mins or so, scheduled as a juypter notebook (but could be implemented via another scheduler; crontab, Airflow, etc...).
+We run something like this every 15 mins or so, scheduled as a juypter notebook
+(but could be implemented via another scheduler; crontab, Airflow, etc...).
 
 ## Frontend Integration
 Our frontend for this tool is a Flask backend API and a React SPA.
@@ -292,19 +292,13 @@ def wait_time():
 
   # Parse query params
   model_name = request.args.get("model_name", config["WAIT_TIMES_MODEL_NAME"])
-  model_version = request.args.get("model_version", config["WAIT_TIMES_MODEL_VERSION"])
+  model_version = request.args.get(
+    "model_version",
+    config["WAIT_TIMES_MODEL_VERSION"]
+  )
 
-  to_ts = request.args.get("to_ts")
-  if to_ts is None:
-    to_ts = datetime.utcnow()
-  else:
-    to_ts = datetime_from_epoch(to_ts)
-
-  from_ts = request.args.get("from_ts")
-  if from_ts is None:
-    from_ts = to_ts - timedelta(hours=6)
-  else:
-    from_ts = datetime_from_epoch(from_ts)
+  to_ts = datetime_from_epoch(to_ts) if 'to_ts' in request.args else datetime.utcnow()
+  from_ts = datetime_from_epoch(from_ts) if 'from_ts' in request.args else to_ts - timedelta(hours=6)
   
   # Fetch Prediction
   predictions = get_most_recent_predictions(

@@ -18,7 +18,7 @@ published: true
 </ul>
 
 
-<h2 style="border-bottom:1pt solid #E8E8E8;">Open Source Contributions</h2>
+<h2 style="border-bottom:1pt solid #E8E8E8;">Open Source</h2>
 
 ### [Estuary](https://github.com/dktr0/estuary) (contributor)
 - Available [here](https://estuary.mcmaster.ca/)
