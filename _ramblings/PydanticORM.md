@@ -4,10 +4,9 @@ title: 'A Minial ORM for Python, Leaning on Pydantic'
 order: 3
 ---
 
-### A Minimal ORM for Python Leaning on Pydantic
 We reached a point in an urgent project recently where we needed to make an 11th hour change in our backend. We would no longer be connecting to an MSSQL DB, but an intermediary data store that only accepts generic ODBC/JDBC connections.
 
-We were depending on SQLAlchemy as a significant ORM library to manage non-trivial transactions (bulk upserts, bulk expire-create updates, etc...). Unfortunately, I couldn't find a SQLAlchemy Dialect that would work with our data store (I tried [sqlalchemy-jdbcapi](https://pypi.org/project/sqlalchemy-jdbcapi/) without luck).
+We were depending on SQLAlchemy as a significant ORM library to manage non-trivial transactions (bulk upserts, bulk expire-create updates, etc...). Unfortunately, I couldn't find a SQLAlchemy Dialect that would work with our data store ([sqlalchemy-jdbcapi](https://pypi.org/project/sqlalchemy-jdbcapi/) wouldn't work out of the box).
 
 It might have made sense at this point to dig deeper into SQLAlchemy's internals and implement our own Dialect but it was a scary path to take given our tight deadline (in hindsight it may have been the right call).
 
