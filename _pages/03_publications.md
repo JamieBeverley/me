@@ -12,6 +12,12 @@ order: 3
 - Beverley, Jamie, and David Ogborn. “CrowdPatching: a system for audience participation in algoraves”. 2017 In Proceedings of the International Conference on Live Coding 2017. 
 - Ogborn, David, Jamie Beverley, Eldad Tsabary, Alex McLean, and Esteban Betancur. “Estuary: Browser-based Collaborative Projectional Live Coding of Musical Patterns”. 2017. In Proceedings of the International Conference on Live Coding 2017.
 
+# Misc/Presentations
+- 2023-10-18. *St. Michael's Hospital Operations Centre - Implications for Optimization of Healthcare*. Digital Health Canada CHIEF Executive Forum Fall Symposium
+- 2023-07-26. *St. Michael's Hospital Operations Centre - Implications for Optimization of Healthcare*. The Institute for Operations Research and the Management Sciences Healthcare Conference.
+- 2022-09-22. Posit Data Science Hangout: [Deploying & monitoring models across a hospital](https://posit.co/data-science-hangout/57-derek-beaton/)
+
+
 # Workshops
 - Estuary workshop ICLC 2019 (Madrin, Spain)
 - Estuary workshop ICLC 2017 (Morelia, México)

@@ -7,6 +7,7 @@ published: true
 ---
 
 # Performances
+- Windosor Algopubnight at ACWR (live streamed from Toronto). Tidalcycles + modular synthesizer improvisation. November 12, 2022.
 - Solo performance using [DeadCode](https://github.com/JamieBeverley/DeadCode) with TidalCycles and Hydra at ICLC 2020 (Limerick, Ireland)
 - Solo performance using TidalCylces and Processing (visuals) at ICLC 2019 (Madrid, Spain)
 - Solo performance of 'Smartphone Soundscapes' for [Havn](https://www.havnode.com/) Sonic Art Series using TidalCycles and a custom system for orchestrating sounds on audience smartphone devices. 2018 (Hamilton, Canada)
