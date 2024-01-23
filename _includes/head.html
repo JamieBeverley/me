@@ -5,10 +5,9 @@
   {%- seo -%}
   <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
   {%- feed_meta -%}
-  {%- if jekyll.environment == 'production' and site.google_analytics -%}
-    {%- include google-analytics.html -%}
-  {%- endif -%}
-
   {%- include custom-head.html -%}
   <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}">
+  {%- if jekyll.environment == 'production' -%}
+    {%- include not-google-analytics.html -%}
+  {%- endif -%}
 </head>

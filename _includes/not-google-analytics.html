@@ -1,0 +1,56 @@
+<script type="text/javascript">
+  class Client {
+
+    getId() {
+      var id = localStorage.getItem('id');
+      if (id) {
+        this.id = id;
+      } else {
+        this.id = `${crypto.randomUUID()}-${new Date().getTime()}`;
+        localStorage.setItem('id', this.id);
+      }
+      return this.id;
+    }
+
+    createBody(type) {
+      return JSON.stringify({
+        clientId: this.getId(),
+        type,
+        location: window.location.href,
+        userAgent: navigator.userAgent,
+      });
+    }
+
+    async depart() {
+      var body = this.createBody('depart');
+      return await this.send(body);
+    }
+
+    async visit() {
+      var body = this.createBody('visit');
+      return this.send(body);
+    }
+
+    send(body) {
+      return navigator.sendBeacon(
+        "https://s152mvgwm8.execute-api.us-east-2.amazonaws.com/visits",
+        body,
+      );
+    }
+
+    init() {
+      this.visit();
+      window.addEventListener('visibilitychange', (e) => {
+        if (document.visibilityState === 'hidden') {
+          this.depart();
+        } else {
+          this.visit();
+        }
+      });
+    }
+  }
+
+  const client = new Client();
+  client.init();
+
+</script>
