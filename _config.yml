@@ -20,7 +20,7 @@
 
 title: "jamie beverley"
 description: ""
-# baseurl: "/me" # the subpath of your site, e.g. /blog
+baseurl: "/me" # the subpath of your site, e.g. /blog
 url: "https://jamiebeverley.net" # the base hostname & protocol for your site, e.g. http://example.com
 footer_links: 
   linkedin: jamie-beverley-2a221695

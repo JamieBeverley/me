@@ -91,7 +91,7 @@ pub extern "C" fn alloc(size: usize) -> *mut f32 {
     // initialize a vec32
     let vec: Vec<f32> = vec![0.0; size];
     // convert heap-allocated array to just the pointer of the beginning of that
-    // array on the heap
+    // array on the heap.
     Box::into_raw(
         // convert vec 32 to a heap-allocated array of f32 values
         vec.into_boxed_slice(),
